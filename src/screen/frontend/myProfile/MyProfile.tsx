@@ -1,44 +1,31 @@
-import {View, Text, Pressable, Image} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {ScrollView} from 'react-native-gesture-handler';
+import React from 'react';
+import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import Images from '../../../constants/Images';
+import useMyProfile from '../../../hooks/useMyProfile';
 import MyProfileStyles from './MyProfileStyles';
-import useMyprofile from '../../../hooks/useMyProfile';
-import {RootStackParamsLists} from '..';
-import {StackNavigationProp} from '@react-navigation/stack';
 
-interface User {
-  name?: string;
-  email?: string;
-  photo?: string;
-}
 
-interface RestPasswordScreenProp {
-  navigation: StackNavigationProp<RootStackParamsLists, 'ResetPassword'>;
-}
-
-export default function MyProfile({navigation}: RestPasswordScreenProp) {
-  const {handleLogout, user} = useMyprofile();
-  const [userInfo, setUserInfo] = useState({
-    userName: '',
-    userEmail: '',
-    userPhoto: '',
-  });
-
-  useEffect(() => {
-    const userName = user?.name || 'Unknown';
-    const userEmail = user?.email || 'Unknown';
-    const userPhoto = user?.photo || '';
-    setUserInfo({userName, userEmail, userPhoto});
-  }, [user]);
+export default function MyProfile() {
+  const {
+    handleLogout,
+    update,
+    userInfo,
+    handleForgetPassword,
+    openCamera,
+    setUserInfo,
+  } = useMyProfile();
 
   return (
     <ScrollView>
       <View style={MyProfileStyles.mainView}>
         <View style={MyProfileStyles.secondView}>
           <Text style={MyProfileStyles.mainHeading}>Profile Sittings</Text>
-          <Pressable style={MyProfileStyles.logoutBtn} onPress={handleLogout}>
+          <TouchableOpacity
+            style={MyProfileStyles.logoutBtn}
+            onPress={handleLogout}>
             <Text style={MyProfileStyles.logoutText}>LogOut</Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
         <View style={MyProfileStyles.thirdView}>
           <View style={MyProfileStyles.imageView}>
@@ -47,43 +34,55 @@ export default function MyProfile({navigation}: RestPasswordScreenProp) {
               source={
                 userInfo.userPhoto
                   ? {uri: userInfo.userPhoto}
-                  : require('../../../assets/images/profilePic.png')
+                  : Images.profileLogo
               }
             />
           </View>
-          <Image
-            source={require('../../../assets/logo/FrameEdit.png')}
-            style={MyProfileStyles.frameEdit}
-          />
+          <TouchableOpacity onPress={openCamera}>
+            <Image
+              source={Images.frameEditLogo}
+              style={MyProfileStyles.frameEdit}
+            />
+          </TouchableOpacity>
         </View>
         <View>
           <Text style={MyProfileStyles.labels}>Name</Text>
           <View style={MyProfileStyles.titleView}>
-            <Text style={MyProfileStyles.profileTitle}>
-              {userInfo.userName}
-            </Text>
+            <TextInput
+              style={MyProfileStyles.profileTitle}
+              value={userInfo.userName}
+              onChangeText={val => {
+                setUserInfo({...userInfo, userName: val});
+              }}
+            />
           </View>
         </View>
         <View>
           <Text style={MyProfileStyles.labels}>Email</Text>
           <View style={MyProfileStyles.emailView}>
-            <Text style={MyProfileStyles.profileEmail}>
-              {userInfo.userEmail}
-            </Text>
+            <TextInput
+              style={MyProfileStyles.profileEmail}
+              value={userInfo.userEmail||""}
+              onChangeText={val => {
+                setUserInfo({...userInfo, userEmail: val});
+              }}
+            />
           </View>
         </View>
         <View style={MyProfileStyles.btnView}>
           <View>
-            <Pressable style={MyProfileStyles.UpdatBtn}>
-              <Text style={MyProfileStyles.UpdateText}>Udate Profile</Text>
-            </Pressable>
+            <TouchableOpacity
+              style={MyProfileStyles.UpdateBtn}
+              onPress={update}>
+              <Text style={MyProfileStyles.UpdateText}>Update Profile</Text>
+            </TouchableOpacity>
           </View>
           <View>
-            <Pressable
+            <TouchableOpacity
               style={MyProfileStyles.ResetBtn}
-              onPress={() => navigation.navigate('ResetPassword')}>
-              <Text style={MyProfileStyles.resetText}>Reset Password</Text>
-            </Pressable>
+              onPress={handleForgetPassword}>
+              <Text style={MyProfileStyles.resetText}>Forget Password</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>

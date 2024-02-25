@@ -1,16 +1,17 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
+import { colors } from '../../../constants/Colors';
 
-const SignInStyle = StyleSheet.create({
+const SignUpStyle = StyleSheet.create({
   loadingContainer: {
     position: 'absolute',
     top: 0,
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)', 
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 999, 
+    zIndex: 999,
   },
   imageContainer: {
     marginVertical: 30,
@@ -24,11 +25,11 @@ const SignInStyle = StyleSheet.create({
     fontSize: 32,
     fontStyle: 'normal',
     fontWeight: 'bold',
-    lineHeight: 150,
+    marginTop: 50,
   },
   inputs: {
     borderRadius: 50,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: colors.secondary,
     paddingVertical: 15,
     paddingLeft: 16,
   },
@@ -43,11 +44,11 @@ const SignInStyle = StyleSheet.create({
   button: {
     paddingVertical: 15,
     borderRadius: 24,
-    backgroundColor: '#7b2cbf',
+    backgroundColor: colors.primary,
     marginVertical: 40,
-    
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
-  
   signText: {
     textAlign: 'center',
     color: 'white',
@@ -66,19 +67,19 @@ const SignInStyle = StyleSheet.create({
   text: {
     textAlign: 'center',
     paddingHorizontal: 10,
-    fontWeight:"bold"
+    fontWeight: 'bold',
   },
   image: {
     width: 40,
     height: 40,
-    backgroundColor: 'rgba(146, 146, 146, 0.19)',
+    backgroundColor: colors.lightGray,
     borderRadius: 50,
   },
   insteadBtn: {
-    color: '#6F3DE9',
+    color: colors.primary,
     fontSize: 14,
     fontWeight: 'bold',
   },
 });
 
-export default SignInStyle;
+export default SignUpStyle;

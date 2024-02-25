@@ -1,35 +1,29 @@
 import React from 'react';
 import {
-  View,
-  Text,
+  ActivityIndicator,
+  Image,
   ScrollView,
+  Text,
   TextInput,
   TouchableOpacity,
-  Image,
-  Pressable,
-  ActivityIndicator,
+  View,
 } from 'react-native';
+import Images from '../../../constants/Images';
+import useSignUp from '../../../hooks/useSignUp';
 import SignUpStyle from './SignUpStyle';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamsList} from '..';
-import useSignUp from '../../hooks/useSignUp';
+import {SigUpScreenProp} from '../../../constants/Types';
 
-
-interface SignInScreenProp {
-  navigation: StackNavigationProp<RootStackParamsList, 'SignUp'>;
-}
-
-;
-export default function SignUp({navigation}: SignInScreenProp) {
-  const {handleChange,handleSignUp,isProcessing ,onGoogleButtonPress}=useSignUp()
+export default function SignUp({navigation}: SigUpScreenProp) {
+  const {handleChange, handleSignUp, isProcessing, onGoogleButtonPress} =
+    useSignUp();
 
   return (
     <ScrollView>
-       {isProcessing && (
-          <View style={SignUpStyle.loadingContainer}>
-            <ActivityIndicator size="large" color="#7b2cbf"  />
-          </View>
-        )}
+      {isProcessing && (
+        <View style={SignUpStyle.loadingContainer}>
+          <ActivityIndicator size="large" color="#7b2cbf" />
+        </View>
+      )}
       <View>
         <Text style={SignUpStyle.mainHeading}>Sign Up</Text>
       </View>
@@ -79,23 +73,22 @@ export default function SignUp({navigation}: SignInScreenProp) {
         </Text>
 
         <TouchableOpacity style={SignUpStyle.button}>
+          {isProcessing && <ActivityIndicator size={'small'} color={'white'} />}
+
           <Text style={SignUpStyle.signText} onPress={handleSignUp}>
             Sign Up
           </Text>
         </TouchableOpacity>
+
         <View style={SignUpStyle.container}>
           <View style={SignUpStyle.line} />
           <Text style={SignUpStyle.text}>OR</Text>
           <View style={SignUpStyle.line} />
         </View>
         <View style={SignUpStyle.imageContainer}>
-          <Pressable onPress={onGoogleButtonPress}>
-
-          <Image
-            style={SignUpStyle.image}
-            source={require('../../assets/logo/Googleplay.png')}
-            />
-            </Pressable>
+          <TouchableOpacity onPress={onGoogleButtonPress}>
+            <Image style={SignUpStyle.image} source={Images.googlePlayLogo} />
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>

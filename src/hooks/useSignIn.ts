@@ -1,12 +1,12 @@
-import auth from '@react-native-firebase/auth';
-import {useEffect, useState} from 'react';
 import firebase from '@react-native-firebase/app';
+import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import {Alert} from 'react-native';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { useEffect, useState } from 'react';
+import { Alert } from 'react-native';
+import { FIRE_BASE_COLLECTION } from '../constants/FirebaseCollection';
+import { SigInUser } from '../constants/Types';
 import useUserCheck from './useUserCheck';
-import { User } from '../types/Types';
-
 
 const initialState = {
   email: '',
@@ -16,9 +16,8 @@ export default function useSignIn() {
   const [state, setState] = useState(initialState);
   const [isProcessing, setIsProcessing] = useState(false);
   const {readUserProfile} = useUserCheck();
-  
 
-  const handleChange = (name: keyof User, value: string) => {
+  const handleChange = (name: keyof SigInUser, value: string) => {
     setState(s => ({...s, [name]: value}));
   };
 
@@ -42,7 +41,7 @@ export default function useSignIn() {
     });
   }, []);
 
-  const handleGoogleSignin = async () => {
+  const handleGoogleSignIn = async () => {
     setIsProcessing(true);
     try {
       await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
@@ -62,7 +61,7 @@ export default function useSignIn() {
         };
         const user = {...currentUser};
         await firestore()
-          .collection('users')
+          .collection(FIRE_BASE_COLLECTION.USERS)
           .doc(currentUser.uid)
           .set(userData);
         readUserProfile(user);
@@ -77,5 +76,5 @@ export default function useSignIn() {
     setIsProcessing(false);
   };
 
-  return {handleChange, handleSignIn, isProcessing, handleGoogleSignin};
+  return {handleChange, handleSignIn, isProcessing, handleGoogleSignIn};
 }

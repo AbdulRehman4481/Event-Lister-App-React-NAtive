@@ -1,157 +1,38 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  ImageBackground,
-  Image,
-  Pressable,
-} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {ScrollView} from 'react-native-gesture-handler';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamsLists} from '..';
-import {colors} from '../../../components/constants/constants';
-import firestore from '@react-native-firebase/firestore';
-import Webview from 'react-native-webview';
+import { StackNavigationProp } from '@react-navigation/stack';
 import dayjs from 'dayjs';
-import auth from '@react-native-firebase/auth';
-import ShowToast from '../../../components/ShowToast/ShowTost';
+import React from 'react';
+import {
+  Image,
+  ImageBackground,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { WebView } from 'react-native-webview';
+import { RootStackParamsLists } from '..';
+import Images from '../../../constants/Images';
+import useEventDetail from '../../../hooks/useEventDetail';
+import EventDetailStyle from './EventDetailStyle';
+import { DetailTicketScreenProp } from '../../../constants/Types';
 
-interface EventInfo {
-  eventName: string;
-  eventPrice: number;
-  eventType: string;
-  eventLocation: string;
-  eventMapUrl: string;
-  uid: string;
-  eventDate: any;
-  eventImage: string;
-  createdBy: {
-    email: string;
-    name: string;
-    photoURL: string;
-  };
-}
 
-interface TicketDataInfo {
-  userId: string;
-}
-
-interface DetailTicketScreenProp {
-  navigation: StackNavigationProp<RootStackParamsLists, 'DetailTicket'>;
-}
-
-export default function EventDetail({route}: any) {
+export default function EventDetail({
+  route,
+  navigation,
+}: DetailTicketScreenProp) {
   const {eventId} = route.params;
-  // const {eventDetails} = useEventDetail(route);
-  const [hasPurchasedTicket, setHasPurchasedTicket] = useState(false);
-  const [eventDetails, setEventDetails] = useState<EventInfo>();
-  console.log('eventId', eventId);
-  useEffect(() => {
-    const fetchEventDetails = async () => {
-      try {
-        const eventDoc = await firestore()
-          .collection('eventInfo')
-          .doc(eventId)
-          .get();
 
-        if (eventDoc.exists) {
-          const eventData = eventDoc.data() as EventInfo;
-          eventData.eventDate = eventData.eventDate.toDate();
-          setEventDetails(eventData);
-
-          // Check if the user has purchased a ticket for this event
-          const currentUser = auth().currentUser;
-          console.log("currentUser",currentUser?.uid)
-          if (currentUser) {
-            const userTickets = await firestore()
-              .collection('usersTickets')
-              .where('userId', '==', currentUser.uid)
-              .where('eventId', '==', eventId)
-              .get();
-            console.log('userTickets', userTickets);
-            // Check if there are any tickets found
-            if (!userTickets.empty) {
-              setHasPurchasedTicket(true);
-            }
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching event details:', error);
-      }
-    };
-
-    fetchEventDetails();
-  }, [eventId]);
-  // useEffect(() => {
-  //   const fetchEventDetails = async () => {
-  //     try {
-  //       const eventDoc = await firestore()
-  //         .collection('eventInfo')
-  //         .doc(eventId)
-  //         .get();
-
-  //       if (eventDoc.exists) {
-  //         const eventData = eventDoc.data() as EventInfo;
-  //         eventData.eventDate = eventData.eventDate.toDate();
-  //         setEventDetails(eventData);
-  //         console.log('eventDetails', eventDetails);
-  //       }
-
-  //     } catch (error) {
-  //       console.error('Error fetching event details:', error);
-  //     }
-  //   };
-
-  //   fetchEventDetails();
-  // }, [eventId]);
-
-  // useEffect(()=>{
-  //   const currentUser =  auth().currentUser;
-  //       if (currentUser) {
-  //         const userTicketDoc =  firestore()
-  //         .collection('userTickets')
-  //         .where('userId', '==', currentUser.uid)
-  //         .where('eventId', '==', eventId)
-  //         .get()}
-
-  //         if (!userTicketDoc.empty) {
-  //           setHasPurchasedTicket(true);
-  //         }
-  // },[])
-
-  const HandleBuyTicket = async () => {
-    try {
-      const currentUser = await auth().currentUser;
-      if (currentUser) {
-        const ticketData = {
-          userId: currentUser.uid,
-          userName: currentUser.displayName,
-          userEmail: currentUser.email,
-          eventId: route.params.eventId,
-          eventName: eventDetails?.eventName,
-          eventDate: eventDetails?.eventDate,
-          eventImage: eventDetails?.eventImage,
-          eventLocation: eventDetails?.eventLocation,
-          eventMapUrl: eventDetails?.eventMapUrl,
-          eventPrice: eventDetails?.eventPrice,
-          eventType: eventDetails?.eventType,
-        };
-
-        await firestore().collection('usersTickets').add(ticketData);
-      } else {
-        console.log('User not authenticated.');
-      }
-    } catch (error) {
-      console.error('Error buying ticket:', error);
-    } finally {
-      ShowToast('success', 'Ticket purchased successfully!');
-    }
-  };
-  console.log('hasPurchasedTicket', hasPurchasedTicket);
+  const {
+    openMap,
+    HandleBuyTicket,
+    eventDetails,
+    hasPurchasedTicket,
+    eventUser
+  } = useEventDetail(eventId);
 
   return (
-    <ScrollView>
+    <ScrollView >
       <View>
         <View style={EventDetailStyle.card}>
           <View style={EventDetailStyle.imageView}>
@@ -159,21 +40,24 @@ export default function EventDetail({route}: any) {
               source={
                 eventDetails?.eventImage
                   ? {uri: eventDetails.eventImage}
-                  : require('../../../assets/images/Grey_background.jpg')
+                  : Images.greyBackgroundLogo
               }
               style={EventDetailStyle.backgroundImage}
               borderRadius={16}></ImageBackground>
           </View>
           <View style={EventDetailStyle.cardDetail}>
             <View style={EventDetailStyle.eventView}>
-              <Text style={EventDetailStyle.cardTitle}>
-                {eventDetails?.eventName}
-              </Text>
+              {eventDetails?.eventName && (
+                <Text style={EventDetailStyle.cardTitle}>
+                  {eventDetails.eventName.charAt(0).toUpperCase() +
+                    eventDetails.eventName.slice(1).toLowerCase()}
+                </Text>
+              )}
               <Text style={EventDetailStyle.price}>
                 ${eventDetails?.eventPrice}
               </Text>
             </View>
-            <View style={EventDetailStyle.detailsecond}>
+            <View style={EventDetailStyle.detailSecond}>
               <Text style={EventDetailStyle.participants}>182</Text>
               <Text>Participant</Text>
               <Text style={EventDetailStyle.Date}>
@@ -191,41 +75,54 @@ export default function EventDetail({route}: any) {
             <View style={EventDetailStyle.profileDetail}>
               <Image
                 source={
-                  eventDetails?.createdBy.photoURL
-                    ? {uri: eventDetails?.createdBy.photoURL}
-                    : require('../../../assets/images/profilePic.png')
+                  eventUser?.photo
+                    ? {uri: eventUser?.photo}
+                    : Images.profileLogo
                 }
                 style={EventDetailStyle.profileImage}
               />
               <Text style={EventDetailStyle.profileTitle}>
-                {eventDetails?.createdBy.name}
+                {eventUser?.name}
               </Text>
             </View>
             <View>
               <Text style={EventDetailStyle.mapText}>Map</Text>
               <View style={EventDetailStyle.mapView}>
-                <Webview
-                  source={{
-                    html: `<iframe  src="${eventDetails?.eventMapUrl}" width=100% height=100% style="border:0; border-radius: 60px;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade "></iframe>`,
-                  }}
-                />
+                <View style={{flex: 1}}>
+                  <WebView
+                    source={{
+                      html: `<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d435519.2274176662!2d74.00472264497051!3d31.483103659723337!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39190483e58107d9%3A0xc23abe6ccc7e2462!2sLahore%2C%20Punjab%2C%20Pakistan!5e0!3m2!1sen!2s!4v1708342896793!5m2!1sen!2s" width="100%" height="100%" style="border:0; border-radius: 50px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`,
+                    }}
+                  />
+                  <TouchableOpacity style={EventDetailStyle.mapLogo} onPress={openMap}>
+                    <Image
+                      source={Images.directMapLogo}
+                      height={35}
+                      width={110}
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
             <View>
               {hasPurchasedTicket ? (
-                <Pressable
+                <TouchableOpacity
                   style={EventDetailStyle.BuyBtn}
-                  onPress={HandleBuyTicket}>
+                  onPress={() => {
+                    navigation.navigate('DetailTicket', {
+                      ticketId: eventDetails?.uid,
+                    });
+                  }}>
                   <Text style={EventDetailStyle.BuyText}>
                     Show Ticket Detail
                   </Text>
-                </Pressable>
+                </TouchableOpacity>
               ) : (
-                <Pressable
+                <TouchableOpacity
                   style={EventDetailStyle.BuyBtn}
                   onPress={HandleBuyTicket}>
                   <Text style={EventDetailStyle.BuyText}>Buy Ticket</Text>
-                </Pressable>
+                </TouchableOpacity>
               )}
             </View>
           </View>
@@ -234,111 +131,3 @@ export default function EventDetail({route}: any) {
     </ScrollView>
   );
 }
-
-const EventDetailStyle = StyleSheet.create({
-  BuyText: {
-    fontWeight: '600',
-    fontSize: 14,
-    color: 'white',
-    textAlign: 'center',
-  },
-  BuyBtn: {
-    backgroundColor: colors.primary,
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    borderRadius: 50,
-  },
-  mapText: {
-    fontWeight: '600',
-    fontSize: 16,
-    color: 'black',
-    marginVertical: 7,
-  },
-  mapView: {
-    width: 335,
-    height: 140,
-    backgroundColor: colors.secondry,
-    borderRadius: 20,
-    marginVertical: 5,
-  },
-  profileTitle: {
-    color: 'black',
-    marginHorizontal: 10,
-  },
-  profileDetail: {
-    marginVertical: 5,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  profileImage: {
-    marginTop: 5,
-    marginRight: 5,
-    height: 30,
-    width: 30,
-    borderRadius: 50,
-  },
-  eventAbout: {
-    fontWeight: '400',
-    fontSize: 14,
-    lineHeight: 22,
-  },
-  aboutHeading: {
-    fontWeight: '600',
-    fontSize: 12,
-    color: 'black',
-    lineHeight: 15.3,
-  },
-  participants: {
-    fontWeight: '600',
-    color: 'black',
-    marginHorizontal: 6,
-  },
-  Date: {
-    marginHorizontal: 6,
-  },
-  detailsecond: {
-    flexDirection: 'row',
-    marginVertical: 10,
-  },
-  cardTitle: {
-    fontWeight: '600',
-    fontSize: 18,
-    color: 'black',
-  },
-  card: {
-    borderColor: 'black',
-    borderRadius: 10,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  imageView: {
-    flex: 1,
-  },
-  backgroundImage: {
-    backgroundColor: 'white',
-    flex: 1,
-    resizeMode: 'cover',
-    height: 180,
-    width: 335,
-  },
-  cardDetail: {
-    padding: 5,
-    justifyContent: 'space-between',
-    marginVertical: 5,
-    paddingHorizontal: 30,
-  },
-
-  price: {
-    color: '#6F3DE9',
-    backgroundColor: 'rgba(146, 146, 146, 0.19)',
-    padding: 6,
-    borderRadius: 15,
-  },
-  eventView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    height: 32,
-    width: 302,
-  },
-});

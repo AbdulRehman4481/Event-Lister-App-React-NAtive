@@ -1,4 +1,4 @@
-import {Toast} from 'react-native-toast-notifications';
+import { Toast } from 'react-native-toast-notifications';
 
 const ShowToast = (type:string,message:string) => {
   Toast.show(message, {

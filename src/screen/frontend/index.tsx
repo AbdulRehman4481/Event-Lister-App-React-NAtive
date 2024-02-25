@@ -1,30 +1,28 @@
-import React from 'react';
-import Home from './home/Home';
-import AddEvents from './addEvents/AddEvents';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import MyProfile from './myProfile/MyProfile';
-import {Image, View} from 'react-native';
-import Discovery from './discovery/Discovery';
-import Ticket from './ticket/Ticket';
-import {colors} from '../../components/constants/constants';
 import {createStackNavigator} from '@react-navigation/stack';
-import DetailTicket from './detailTicket/DetailTicket';
-import EventDetail from './eventDetail/EventDetail';
-import ResetPassword from '../../auth/resetPassword/ResetPassword';
+import React from 'react';
+import {Image, View} from 'react-native';
+import {colors} from '../../constants/Colors';
+import Images from '../../constants/Images';
+import {FRONTEND_STACK_SCREENS} from '../../constants/Navigation';
+import {FRONTEND_STACK_NAVIGATION_SCREENS} from '../../navigation/NavigationScreens';
+import AddEvents from './addEvents/AddEvents';
+import Discovery from './discovery/Discovery';
+import Home from './home/Home';
+import MyProfile from './myProfile/MyProfile';
+import Ticket from './ticket/Ticket';
 
 const Tab = createBottomTabNavigator();
 export type RootStackParamsLists = {
-  DetailTicket: undefined;
+  DetailTicket: {ticketId: string | undefined};
   EventDetail: {eventId: string};
+  EditEvents: {eventId: string};
   MyTabs: undefined;
-  ResetPassword: undefined;
 };
-
-//
 
 const Stack = createStackNavigator<RootStackParamsLists>();
 
-function MyTabs() {
+export function MyTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -40,7 +38,7 @@ function MyTabs() {
           title: '',
           tabBarIcon: tabInfo => (
             <Image
-              source={require('../../assets/logo/Heart.png')}
+              source={Images.heartLogo}
               style={{tintColor: tabInfo.focused ? 'black' : 'gray'}}
             />
           ),
@@ -54,7 +52,7 @@ function MyTabs() {
           title: '',
           tabBarIcon: tabInfo => (
             <Image
-              source={require('../../assets/logo/Discovery.png')}
+              source={Images.discoveryLogo}
               style={{tintColor: tabInfo.focused ? 'black' : 'gray'}}
             />
           ),
@@ -74,7 +72,7 @@ function MyTabs() {
                 borderRadius: 50,
                 padding: 10,
               }}>
-              <Image source={require('../../assets/logo/Add.png')} />
+              <Image source={Images.addLogo} />
             </View>
           ),
         }}
@@ -87,7 +85,7 @@ function MyTabs() {
           title: '',
           tabBarIcon: tabInfo => (
             <Image
-              source={require('../../assets/logo/Ticket.png')}
+              source={Images.ticketLogo}
               style={{tintColor: tabInfo.focused ? 'black' : 'gray'}}
             />
           ),
@@ -101,7 +99,7 @@ function MyTabs() {
           title: '',
           tabBarIcon: tabInfo => (
             <Image
-              source={require('../../assets/logo/Profile.png')}
+              source={Images.accountLogo}
               style={{tintColor: tabInfo.focused ? 'black' : 'gray'}}
             />
           ),
@@ -121,31 +119,36 @@ export default function Index() {
             headerShown: false,
           }}
         />
-        <Stack.Screen
-          name="DetailTicket"
-          component={DetailTicket}
-          options={{
-            headerStyle: {
-              backgroundColor: colors.darBlue,
-            },
-            headerTitleAlign: 'center',
-            headerTintColor: 'white',
-          }}
-        />
-        <Stack.Screen
-          name="EventDetail"
-          component={EventDetail}
-          options={{
-            headerTitleAlign: 'center',
-          }}
-        />
-        <Stack.Screen
-          name="ResetPassword"
-          component={ResetPassword}
-          options={{
-            headerTitleAlign: 'center',
-          }}
-        />
+        {FRONTEND_STACK_NAVIGATION_SCREENS.map(screen => (
+          <Stack.Screen
+            key={screen.name}
+            name={screen.name as keyof RootStackParamsLists}
+            component={screen.component}
+            options={{
+              headerShown:
+                screen.name === FRONTEND_STACK_SCREENS.EditEvents
+                  ? false
+                  : true,
+              headerStyle: {
+                backgroundColor:
+                  screen.name === FRONTEND_STACK_SCREENS.DetailTicket
+                    ? colors.darBlue
+                    : undefined,
+              },
+              headerTitleStyle: {
+                color:
+                  screen.name === FRONTEND_STACK_SCREENS.DetailTicket
+                    ? 'white'
+                    : 'black',
+              },
+              headerTintColor:
+                screen.name === FRONTEND_STACK_SCREENS.DetailTicket
+                  ? 'white'
+                  : 'black',
+              headerTitleAlign: 'center',
+            }}
+          />
+        ))}
       </Stack.Navigator>
     </>
   );

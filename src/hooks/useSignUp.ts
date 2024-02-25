@@ -1,22 +1,15 @@
-import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import firebase from '@react-native-firebase/app';
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import {useEffect, useState} from 'react';
-import {Alert} from 'react-native';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../store/store';
-import {setLoggedIn, setLoggedOut} from '../store/reducer/authReducer';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { useEffect, useState } from 'react';
+import { Alert } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { FIRE_BASE_COLLECTION } from '../constants/FirebaseCollection';
+import { SignUpState } from '../constants/Types';
+import { setLoggedIn } from '../store/reducer/authReducer';
 
-interface State {
-  name: string;
-  email: string | null;
-  password: string;
-  photo: string;
-  uid: string;
-}
-
-const initialUser: State = {
+const initialUser: SignUpState = {
   name: '',
   email: '',
   password: '',
@@ -28,13 +21,13 @@ export default function useSignUp() {
   const [isProcessing, setIsProcessing] = useState(false);
   const dispatch = useDispatch();
 
-  const handleChange = (name: keyof State, value: string) => {
+  const handleChange = (name: keyof SignUpState, value: string) => {
     setState(prevState => ({
       ...prevState,
       [name]: value,
     }));
   };
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     let {email, password, name} = state;
     if (!email) {
       Alert.alert('Please enter your email');
@@ -44,39 +37,45 @@ export default function useSignUp() {
       Alert.alert('Password must be 6 chars');
       return;
     }
-    setIsProcessing(true);
-    auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(userCredential => {
-        const user = userCredential.user;
-        console.log(user);
-        createUserProfile(user, name);
-      })
-      .catch(error => {
-        if (error.code === 'auth/email-already-in-use') {
-          console.log('That email address is already in use!');
-        }
-        if (error.code === 'auth/invalid-email') {
-          console.log('That email address is invalid!');
-        }
-        console.error(error);
-      });
-    setIsProcessing(false);
+    try {
+      setIsProcessing(true);
+      await auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then(userCredential => {
+          const user = userCredential.user;
+          createUserProfile(user, name);
+        })
+        .catch(error => {
+          if (error.code === 'auth/email-already-in-use') {
+            console.log('That email address is already in use!');
+          }
+          if (error.code === 'auth/invalid-email') {
+            console.log('That email address is invalid!');
+          }
+          console.error(error);
+        });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
-  const createUserProfile = (user: FirebaseAuthTypes.User, name: string) => {
+  const createUserProfile = async (
+    user: FirebaseAuthTypes.User,
+    name: string,
+  ) => {
     let formData = {
       name: name,
       email: user.email,
       uid: user.uid,
       dateCreated: firebase.firestore.FieldValue.serverTimestamp(),
     };
-    firestore()
-      .collection('users')
+    await firestore()
+      .collection(FIRE_BASE_COLLECTION.USERS)
       .doc(user.uid)
       .set(formData)
       .then(() => {
-        console.log('User added!');
         dispatch(setLoggedIn({user}));
       })
       .catch(err => {
@@ -111,7 +110,7 @@ export default function useSignUp() {
         };
         const user = {...userData};
         await firestore()
-          .collection('users')
+          .collection(FIRE_BASE_COLLECTION.USERS)
           .doc(currentUser.uid)
           .set(userData);
         dispatch(setLoggedIn({user}));

@@ -1,9 +1,10 @@
 import { StyleSheet } from "react-native";
+import { colors } from "../../../constants/Colors";
 
 const EditEventsStyles = StyleSheet.create({
     resultBtn: {
       marginVertical:20,
-      backgroundColor: '#6F3DE9',
+      backgroundColor: colors.primary,
       borderRadius:22,
       padding:13
     },
@@ -27,6 +28,7 @@ const EditEventsStyles = StyleSheet.create({
       alignItems: 'center',
     },
     mainView: {
+      
       marginHorizontal: 20,
     },
     eventHeading: {
@@ -39,7 +41,7 @@ const EditEventsStyles = StyleSheet.create({
     },
     inputs: {
       borderRadius: 50,
-      backgroundColor: '#F9F9F9',
+      backgroundColor: colors.secondary,
       paddingVertical: 15,
       paddingLeft: 16,
     },

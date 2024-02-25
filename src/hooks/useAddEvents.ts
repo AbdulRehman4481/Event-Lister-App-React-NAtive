@@ -1,12 +1,12 @@
-import {useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
-import {launchImageLibrary} from 'react-native-image-picker';
-import ShowToast from '../components/ShowToast/ShowTost';
-import dayjs from 'dayjs';
-import {useSelector} from 'react-redux';
-import {RootState} from '../store/store';
-import {EventInfo} from '../types/Types';
+import { useState } from 'react';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { useSelector } from 'react-redux';
+import ShowToast from '../components/showToast/ShowTost';
+import { FIRE_BASE_COLLECTION } from '../constants/FirebaseCollection';
+import { EventInfo } from '../constants/Types';
+import { RootState } from '../store/store';
 
 type EventImage = string | {assets: {uri: string; fileName: string}[]};
 
@@ -28,11 +28,32 @@ const initialEvent: EventInfo = {
 };
 export default function useAddEvents() {
   const [eventInfo, setEventInfo] = useState<EventInfo>(initialEvent);
-  const [isloading, setIsloading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
   const [eventImage, setEventImage] = useState<EventImage>();
   const user = useSelector((state: RootState) => state.auth.user);
+  const [selectedOption, setSelectedOption] = useState('Select an option');
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
+  const handleSelect = (option: string) => {
+    setSelectedOption(option);
+    setIsModalVisible(false)
+  };
+
+  const options = [
+    'Exhibition',
+    'Workshop',
+    'Conference',
+    'Festival',
+    'Game',
+    'Premiere',
+    'Concert',
+    'Charity Auction',
+    'Show',
+    'Gala',
+    'Fair',
+    'Comedy',
+  ];
   const handleChange = (name: keyof EventInfo, value: string | number) => {
     setEventInfo(prevState => ({
       ...prevState,
@@ -54,7 +75,6 @@ export default function useAddEvents() {
       eventLocation,
       eventDate,
       eventMapUrl,
-      // eventUid,
     } = eventInfo;
 
     if (
@@ -76,7 +96,7 @@ export default function useAddEvents() {
     const event = {
       eventName,
       eventPrice,
-      eventType,
+      eventType: selectedOption.toLowerCase(),
       eventDate,
       eventLocation,
       eventMapUrl,
@@ -91,20 +111,23 @@ export default function useAddEvents() {
     };
 
     try {
-      setIsloading(true);
+      setIsLoading(true);
       if (!eventImage) {
         ShowToast('danger', 'Please Upload Image');
         return;
       }
-      const url = await uploadEventIamge(eventImage);
+      const url = await uploadEventImage(eventImage);
       if (!url) throw new Error('Image not uploaded');
       event.eventImage = url;
-      await firestore().collection('eventInfo').doc(event.uid).set(event);
+      await firestore()
+        .collection(FIRE_BASE_COLLECTION.EVENTINFO)
+        .doc(event.uid)
+        .set(event);
     } catch (error) {
       console.log('error', error);
     } finally {
       ShowToast('success', 'Post Upload Successfully');
-      setIsloading(false);
+      setIsLoading(false);
       setEventInfo(initialEvent);
       setEventImage('');
     }
@@ -115,7 +138,7 @@ export default function useAddEvents() {
     setEventImage(result as EventImage);
   };
 
-  const uploadEventIamge = async (eventImage: EventImage) => {
+  const uploadEventImage = async (eventImage: EventImage) => {
     if (typeof eventImage === 'object') {
       const reference = storage().ref(eventImage.assets[0].fileName);
       const pathToFile = eventImage.assets[0].uri;
@@ -132,7 +155,7 @@ export default function useAddEvents() {
   };
 
   return {
-    isloading,
+    isLoading,
     eventImage,
     eventInfo,
     openCamera,
@@ -142,5 +165,9 @@ export default function useAddEvents() {
     setOpen,
     open,
     setEventInfo,
+    options,
+    handleSelect,
+    selectedOption,
+    setIsModalVisible,isModalVisible
   };
 }

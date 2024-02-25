@@ -1,6 +1,7 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
+import { colors } from '../../../constants/Colors';
 
-const SignUpStyle = StyleSheet.create({
+const SignInStyle = StyleSheet.create({
   loadingContainer: {
     position: 'absolute',
     top: 0,
@@ -24,11 +25,11 @@ const SignUpStyle = StyleSheet.create({
     fontSize: 32,
     fontStyle: 'normal',
     fontWeight: 'bold',
-    marginTop:50
+    lineHeight: 150,
   },
   inputs: {
     borderRadius: 50,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: colors.secondary,
     paddingVertical: 15,
     paddingLeft: 16,
   },
@@ -43,9 +44,12 @@ const SignUpStyle = StyleSheet.create({
   button: {
     paddingVertical: 15,
     borderRadius: 24,
-    backgroundColor: '#6F3DE9',
+    backgroundColor: colors.primary,
     marginVertical: 40,
+    
+    
   },
+
   signText: {
     textAlign: 'center',
     color: 'white',
@@ -64,19 +68,20 @@ const SignUpStyle = StyleSheet.create({
   text: {
     textAlign: 'center',
     paddingHorizontal: 10,
-    fontWeight: 'bold',
+    fontWeight:"bold"
   },
   image: {
     width: 40,
     height: 40,
-    backgroundColor: 'rgba(146, 146, 146, 0.19)',
+    backgroundColor: colors.lightGray,
     borderRadius: 50,
   },
   insteadBtn: {
-    color: '#6F3DE9',
+    color: colors.primary,
     fontSize: 14,
     fontWeight: 'bold',
+    
   },
 });
 
-export default SignUpStyle;
+export default SignInStyle;

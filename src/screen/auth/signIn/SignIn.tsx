@@ -1,25 +1,20 @@
 import React from 'react';
 import {
-  View,
-  Text,
+  ActivityIndicator,
+  Image,
   ScrollView,
+  Text,
   TextInput,
   TouchableOpacity,
-  Image,
-  Pressable,
-  ActivityIndicator,
+  View,
 } from 'react-native';
+import Images from '../../../constants/Images';
+import useSignIn from '../../../hooks/useSignIn';
 import SignInStyle from './SignInStyle';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamsList} from '..';
-import useSignIn from '../../hooks/useSignIn';
-
-interface SignInScreenProp {
-  navigation: StackNavigationProp<RootStackParamsList, 'SignIn'>;
-}
+import {SignInScreenProp} from '../../../constants/Types';
 
 export default function SignIn({navigation}: SignInScreenProp) {
-  const {handleChange, handleSignIn, isProcessing, handleGoogleSignin} =
+  const {handleChange, handleSignIn, isProcessing, handleGoogleSignIn} =
     useSignIn();
 
   return (
@@ -56,7 +51,7 @@ export default function SignIn({navigation}: SignInScreenProp) {
           />
         </View>
         <Text style={{marginTop: 15}}>
-          Don’t have an account?
+          Don’t have an account? &nbsp;
           <Text
             onPress={() => navigation.navigate('SignUp')}
             style={SignInStyle.insteadBtn}>
@@ -66,7 +61,13 @@ export default function SignIn({navigation}: SignInScreenProp) {
         </Text>
 
         <TouchableOpacity style={SignInStyle.button} onPress={handleSignIn}>
-          <Text style={SignInStyle.signText}>Sign In</Text>
+          <Text style={SignInStyle.signText}>
+            {' '}
+            {isProcessing && (
+              <ActivityIndicator size={'small'} color={'white'} />
+            )}
+            Sign In
+          </Text>
         </TouchableOpacity>
 
         <View style={SignInStyle.container}>
@@ -75,12 +76,9 @@ export default function SignIn({navigation}: SignInScreenProp) {
           <View style={SignInStyle.line} />
         </View>
         <View style={SignInStyle.imageContainer}>
-          <Pressable onPress={handleGoogleSignin}>
-            <Image
-              style={SignInStyle.image}
-              source={require('../../assets/logo/Googleplay.png')}
-            />
-          </Pressable>
+          <TouchableOpacity onPress={handleGoogleSignIn}>
+            <Image style={SignInStyle.image} source={Images.googlePlayLogo} />
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>

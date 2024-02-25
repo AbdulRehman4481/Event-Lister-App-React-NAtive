@@ -1,5 +1,5 @@
-import { StyleSheet } from "react-native";
-import { colors } from "../../../components/constants/constants";
+import {StyleSheet} from 'react-native';
+import {colors} from '../../../constants/Colors';
 
 const MyProfileStyles = StyleSheet.create({
   btnView: {
@@ -25,31 +25,34 @@ const MyProfileStyles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
   },
-  UpdatBtn: {
+  UpdateBtn: {
     backgroundColor: colors.primary,
     paddingHorizontal: 20,
     paddingVertical: 15,
     borderRadius: 50,
   },
   titleView: {
-    backgroundColor: 'white',
-    paddingVertical: 10,
-    paddingHorizontal: 6,
+    backgroundColor: colors.secondary,
+
+    width: 335,
+    height: 52,
     borderRadius: 20,
   },
   emailView: {
-    backgroundColor: 'white',
-    paddingVertical: 10,
-    paddingHorizontal: 6,
     borderRadius: 20,
+    width: 335,
+    height: 52,
+    backgroundColor: colors.secondary,
   },
   profileTitle: {
     fontSize: 14,
     fontWeight: '400',
+    padding: 15,
   },
   profileEmail: {
     fontSize: 14,
     fontWeight: '400',
+    padding: 15,
   },
   labels: {
     fontFamily: 'Poppins',
@@ -78,7 +81,7 @@ const MyProfileStyles = StyleSheet.create({
     height: 130,
     justifyContent: 'center',
     alignItems: 'center',
-    borderStyle: "dashed",
+    borderStyle: 'dashed',
   },
   profileImage: {
     width: 125,
@@ -93,7 +96,7 @@ const MyProfileStyles = StyleSheet.create({
     color: 'black',
   },
   mainView: {
-    marginHorizontal: 20,
+    marginHorizontal: 12,
     marginVertical: 20,
   },
   secondView: {

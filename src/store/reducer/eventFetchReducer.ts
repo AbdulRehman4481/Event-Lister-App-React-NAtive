@@ -1,6 +1,7 @@
-import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
 import firestore from '@react-native-firebase/firestore';
-import {EventInfo, EventState} from '../../types/Types';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { FIRE_BASE_COLLECTION } from '../../constants/FirebaseCollection';
+import { EventInfo, EventState } from '../../constants/Types';
 
 const initialState: EventState = {
   eventData: [],
@@ -11,7 +12,10 @@ const initialState: EventState = {
 export const fetchEvents = createAsyncThunk<EventInfo[], void>(
   'events/fetchEvents',
   async () => {
-    const querySnapshot = await firestore().collection('eventInfo').get();
+    const querySnapshot = await firestore()
+      .collection(FIRE_BASE_COLLECTION.EVENTINFO)
+      .orderBy('eventDate')
+      .get();
     const events: EventInfo[] = [];
 
     querySnapshot.forEach(documentSnapshot => {
@@ -39,7 +43,7 @@ export const fetchTodayEvents = createAsyncThunk<EventInfo[], void>(
     );
 
     const querySnapshot = await firestore()
-      .collection('eventInfo')
+      .collection(FIRE_BASE_COLLECTION.EVENTINFO)
       .where('eventDate', '>=', startOfToday)
       .where('eventDate', '<', endOfDay)
       .limit(1)
@@ -73,6 +77,7 @@ const eventSlice = createSlice({
       .addCase(fetchEvents.rejected, state => {
         state.isLoading = false;
       })
+
       .addCase(fetchTodayEvents.pending, state => {
         state.isLoading = true;
       })

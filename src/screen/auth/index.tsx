@@ -1,10 +1,9 @@
-import React from 'react';
-import SignIn from './signIn/SignIn';
-import SignUp from './signUp/SignUp';
 import {
   StackNavigationProp,
   createStackNavigator,
 } from '@react-navigation/stack';
+import React from 'react';
+import { AUTH_STACK_NAVIGATION_SCREENS } from '../../navigation/NavigationScreens';
 
 export type RootStackParamsList = {
   SignIn: undefined;
@@ -20,21 +19,16 @@ export default function Index() {
   return (
     <>
       <Stack.Navigator>
-        <Stack.Screen
-          name="SignIn"
-          component={SignIn}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="SignUp"
-          component={SignUp}
-          options={{
-            headerShown: false
-          }}
-        />
-       
+        {AUTH_STACK_NAVIGATION_SCREENS.map(item => (
+          <Stack.Screen
+            key={item.name}
+            name={item.name as keyof RootStackParamsList}
+            component={item.component}
+            options={{
+              headerShown: false,
+            }}
+          />
+        ))}
       </Stack.Navigator>
     </>
   );

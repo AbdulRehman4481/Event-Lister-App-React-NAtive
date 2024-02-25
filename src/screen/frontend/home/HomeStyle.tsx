@@ -1,12 +1,12 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
+import { colors } from '../../../constants/Colors';
 
 const HomeStyle = StyleSheet.create({
   mainViewScroll: {
-    marginHorizontal: 15,
-    marginVertical: 20,
-    padding: 10,
+    backgroundColor: 'white',
   },
   HomeMain: {
+    margin: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -14,7 +14,7 @@ const HomeStyle = StyleSheet.create({
     fontFamily: 'Poppins',
     fontSize: 22,
     fontStyle: 'normal',
-    fontWeight: '700',
+    fontWeight: '600',
     color: 'black',
   },
   inputView: {
@@ -23,8 +23,8 @@ const HomeStyle = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 50,
     paddingHorizontal: 10,
-    borderColor: 'rgba(146, 146, 146, 0.19)',
-    marginVertical: 20,
+    borderColor: colors.lightGray,
+    margin: 20,
   },
   image: {
     height: 20,
@@ -40,38 +40,44 @@ const HomeStyle = StyleSheet.create({
     alignItems: 'center',
   },
   onText: {
-    fontFamily: 'Poppins',
+    fontFamily: 'Poppins-SemiBold',
     fontSize: 18,
-    fontStyle: 'normal',
-    fontWeight: '700',
+    // fontStyle: 'normal',
+    fontWeight: '600',
     color: 'black',
+    lineHeight: 23.4,
   },
   seeText: {
     fontFamily: 'Poppins',
     fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '500',
-    color: '#6F3DE9',
+    color: colors.primary,
   },
   secondView: {
+    width: 335,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
   card: {
+    width: 335,
+    marginHorizontal: 12,
+    marginBottom: 10,
     borderColor: 'black',
     borderRadius: 10,
     backgroundColor: 'white',
     padding: 6,
     shadowColor: 'black',
     shadowOffset: {
-      width: 2,
-      height: 2,
+      width: 0,
+      height: 0,
     },
-    shadowOpacity: 0.4,
-    shadowRadius: 3,
-    elevation: 4,
+    shadowOpacity: 0.2,
+    shadowRadius: 32,
+    elevation: 2,
   },
   imageView: {
     flex: 1,
@@ -80,12 +86,13 @@ const HomeStyle = StyleSheet.create({
     backgroundColor: 'white',
     flex: 1,
     resizeMode: 'cover',
-    height: 180,
+    width: 323,
+    height: 160,
   },
   cardTitle: {
-    color: '#171B2E',
+    color: colors.darBlue,
     fontFamily: 'Poppins',
-    fontSize: 18,
+    fontSize: 14,
     fontStyle: 'normal',
     fontWeight: '700',
     lineHeight: 18,
@@ -121,28 +128,35 @@ const HomeStyle = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   price: {
-    color: '#6F3DE9',
-    backgroundColor: 'rgba(146, 146, 146, 0.19)',
+    color: colors.primary,
+    backgroundColor: colors.lightGray,
     padding: 6,
     borderRadius: 15,
   },
   profileTitle: {
+    fontSize: 12,
+    fontWeight: '400',
     color: 'black',
   },
   cardDate: {
+    color: 'rgba(182, 197, 205, 0.3)',
     marginVertical: 10,
+    marginHorizontal: 10,
   },
   hr: {
-    borderBottomColor: 'rgba(146, 146, 146, 0.19)',
+    borderBottomColor: colors.lightGray,
     borderBottomWidth: 1,
     marginVertical: 10,
+    marginHorizontal: 10,
+
   },
   secondViewExtra: {
-    marginVertical: 20,
+    marginVertical: 10,
   },
   smallCard: {
-    width:305,
-    marginVertical:10,
+    width: 335,
+    marginVertical: 10,
+    marginHorizontal: 13,
     flexDirection: 'row',
     borderColor: 'black',
     borderRadius: 10,
@@ -157,38 +171,34 @@ const HomeStyle = StyleSheet.create({
     shadowRadius: 3,
     elevation: 4,
   },
-  smallIamge: {
+  smallImage: {
     backgroundColor: 'white',
     flex: 1,
     resizeMode: 'cover',
     height: 80,
     width: 80,
   },
-  smallCardDetail:{
-    width:200,
-    flexDirection:"row",
-    marginHorizontal:8,
-    justifyContent:"space-between"
-    
-    
-    
+  smallCardDetail: {
+    width: 230,
+    flexDirection: 'row',
+    marginHorizontal: 8,
+    justifyContent: 'space-between',
   },
-  smallTitle:{
-    color:"black",
-    fontSize:16,
-    fontWeight:"700",
-    marginVertical:8,   
-  }
-  ,
-  smallPrice:{
-    color: '#6F3DE9',
-    backgroundColor: 'rgba(146, 146, 146, 0.19)',
+  smallTitle: {
+    color: 'black',
+    fontSize: 16,
+    fontWeight: '700',
+    marginVertical: 8,
+  },
+  smallPrice: {
+    color: colors.primary,
+    backgroundColor: colors.lightGray,
     padding: 6,
     borderRadius: 15,
-    // marginLeft:30
-
   },
-  
+  smallType:{
+    color:"rgba(148, 150, 165, 1)"
+  }
 });
 
 export default HomeStyle;

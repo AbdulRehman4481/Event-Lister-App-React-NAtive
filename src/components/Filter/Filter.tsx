@@ -1,19 +1,70 @@
-import {Picker} from '@react-native-picker/picker';
-import React, {useState} from 'react';
+import MultiSlider from '@ptomasroos/react-native-multi-slider';
+import React, { useState } from 'react';
 import {
-  Alert,
+  Image,
   Modal,
   Text,
-  Pressable,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
-  Image,
-  TextInput,
 } from 'react-native';
-import FilterStyles from './FilterStyles';
+import DatePicker from 'react-native-date-picker';
+import { colors } from '../../constants/Colors';
+import Images from '../../constants/Images';
+import GlobalStyle from '../../css/GlobalStyle';
+import FilterStyles from './filterStyles';
 
-const Filter = () => {
+const Filter = ({
+  onFilterChange,
+}: {
+  onFilterChange: (values: number[], selectedValue: string, date: any) => void;
+}) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedValue, setSelectedValue] = useState('java');
+  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const [values, setValues] = useState([0, 5000]);
+  const handleValuesChange = (newValues: number[]) => {
+    setValues(newValues);
+  };
+
+  const handleReset = () => {
+    setValues([0, 5000]);
+    setDate(new Date());
+  };
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const options = [
+    'Exhibition',
+    'Workshop',
+    'Conference',
+    'Festival',
+    'Game',
+    'Premiere',
+    'Concert',
+    'Charity Auction',
+    'Show',
+    'Gala',
+    'Fair',
+    'Comedy',
+  ];
+
+  const handleFilter = () => {
+    const selectedCategory = selectedOption;
+    onFilterChange(values, selectedCategory, date);
+    setModalVisible(!modalVisible);
+  };
+  const [selectedOption, setSelectedOption] = useState('Select an option');
+
+  const handleSelect = (option: string) => {
+    setSelectedOption(option);
+    setIsModalVisible(false);
+  };
+
+  const renderCustomMarker = (props: any) => (
+    <>
+      <View style={FilterStyles.customMarker}></View>
+      <Text style={FilterStyles.markerText}>${props.currentValue}</Text>
+    </>
+  );
 
   return (
     <View>
@@ -22,62 +73,142 @@ const Filter = () => {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
         }}>
-        <View style={FilterStyles.centeredView}>
-          <View style={FilterStyles.modalView}>
-            <View style={FilterStyles.firstView}>
-              <Text style={FilterStyles.filterText}>Fiters</Text>
-              <Text style={FilterStyles.restText}>Reset</Text>
-            </View>
-            <View>
-              <Text style={FilterStyles.rangeTitle}>Price Range</Text>
-            </View>
-            <View>
-              <Text style={{height: 80}}>Range</Text>
-            </View>
-            <View>
-              <Text style={FilterStyles.inputLabel}>Sorted By Date</Text>
-              <TextInput
-                style={FilterStyles.inputz}
-                placeholder="Selete Date Range"
-              />
-            </View>
-            <View>
-              <Text style={FilterStyles.inputLabel}>Sorted By Category</Text>
-              <View>
-                <Picker
-                  selectedValue={selectedValue}
-                  onValueChange={(itemValue, itemIndex) =>
-                    setSelectedValue(itemValue)
-                  }
-
-                  // mode="dropdown"
-                >
-                  <Picker.Item label="Java" value="java" />
-                  <Picker.Item label="JavaScript" value="js" />
-                  <Picker.Item label="Python" value="python" />
-                  <Picker.Item label="C#" value="csharp" />
-                </Picker>
+        <TouchableWithoutFeedback
+          onPress={() => setModalVisible(!modalVisible)}>
+          <View style={FilterStyles.centeredView}>
+            <View style={FilterStyles.modalView}>
+              <View style={FilterStyles.firstView}>
+                <Text style={FilterStyles.filterText}>Filters</Text>
+                <TouchableOpacity onPress={handleReset}>
+                  <Text style={FilterStyles.restText}>Reset</Text>
+                </TouchableOpacity>
               </View>
+              <View>
+                <Text style={FilterStyles.rangeTitle}>Price Range</Text>
+              </View>
+              <View style={{marginTop: 10, marginBottom: 24}}>
+                <MultiSlider
+                  values={values}
+                  sliderLength={300}
+                  onValuesChange={handleValuesChange}
+                  min={0}
+                  max={5000}
+                  step={2}
+                  allowOverlap
+                  snapped
+                  selectedStyle={{
+                    backgroundColor: colors.primary,
+                    height: 2,
+                  }}
+                  unselectedStyle={{
+                    backgroundColor: 'lightgray',
+                  }}
+                  containerStyle={{
+                    height: 30,
+                  }}
+                  customMarker={renderCustomMarker}
+                />
+              </View>
+              <View style={FilterStyles.hr} />
+              <View>
+                <Text style={FilterStyles.inputLabel}>Sorted By Date</Text>
+                <TouchableOpacity
+                  onPress={() => setOpen(true)}
+                  style={GlobalStyle.globalInput}>
+                  <Text style={{paddingHorizontal: 10}}>
+                    {date.toDateString()}
+                  </Text>
+                </TouchableOpacity>
+                {open && (
+                  <DatePicker
+                    modal
+                    mode={'date'}
+                    open={open}
+                    date={date}
+                    onConfirm={date => {
+                      setOpen(false);
+                      setDate(date);
+                    }}
+                    onCancel={() => {
+                      setOpen(false);
+                    }}
+                  />
+                )}
+              </View>
+              <View>
+                <Text style={FilterStyles.inputLabel}>Sorted By Category</Text>
+                <View style={{marginVertical: 2}}>
+                  <TouchableOpacity
+                    onPress={() => setIsModalVisible(true)}
+                    style={GlobalStyle.globalInput}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginRight: 10,
+                      }}>
+                      <Text style={FilterStyles.selectedOptionText}>
+                        {selectedOption}
+                      </Text>
+                      <Image width={20} height={20} source={Images.arrowLogo} />
+                    </View>
+                  </TouchableOpacity>
+                  <Modal
+                    transparent={true}
+                    visible={isModalVisible}
+                    onRequestClose={() => {
+                      setIsModalVisible(false);
+                    }}>
+                    <TouchableWithoutFeedback
+                      onPress={() => {
+                        setIsModalVisible(false);
+                      }}>
+                      <View
+                        style={{
+                          flex: 1,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <View style={FilterStyles.modalContainer}>
+                          {options.map((option: string) => (
+                            <TouchableOpacity
+                              key={option}
+                              onPress={() => handleSelect(option)}>
+                              <View style={FilterStyles.optionContainer}>
+                                <Text style={FilterStyles.optionText}>
+                                  {option}
+                                </Text>
+                              </View>
+                            </TouchableOpacity>
+                          ))}
+                        </View>
+                      </View>
+                    </TouchableWithoutFeedback>
+                  </Modal>
+                </View>
+              </View>
+              <View style={FilterStyles.hr} />
+
+              <TouchableOpacity
+                style={[FilterStyles.button, FilterStyles.buttonClose]}
+                onPress={handleFilter}>
+                <Text style={FilterStyles.textStyle}>Show Result</Text>
+              </TouchableOpacity>
             </View>
-            <Pressable
-              style={[FilterStyles.button, FilterStyles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}>
-              <Text style={FilterStyles.textStyle}>Show Result</Text>
-            </Pressable>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
-      <Pressable
+      <TouchableOpacity
         style={FilterStyles.imageContainer}
         onPress={() => setModalVisible(true)}>
         <Image
           source={require('../../assets/logo/FilterIcon.png')}
           style={FilterStyles.image}
         />
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };

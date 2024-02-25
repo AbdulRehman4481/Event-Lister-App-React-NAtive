@@ -1,21 +1,24 @@
 import React from 'react';
 import {
-  View,
-  Text,
-  ScrollView,
-  TextInput,
-  Image,
-  Pressable,
   ActivityIndicator,
+  Image,
+  Modal,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
-import AddEventsStyles from './AddEventsStyles';
-import useAddEvents from '../../../hooks/useAddEvents';
 import DatePicker from 'react-native-date-picker';
+import Images from '../../../constants/Images';
+import GlobalStyle from '../../../css/GlobalStyle';
+import useAddEvents from '../../../hooks/useAddEvents';
+import AddEventsStyles from './AddEventsStyles';
 
 export default function AddEvents() {
   const {
-    isloading,
+    isLoading,
     eventImage,
     openCamera,
     handleChange,
@@ -24,6 +27,8 @@ export default function AddEvents() {
     setOpen,
     open,
     setEventInfo,
+    options,isModalVisible,setIsModalVisible,
+    handleSelect,selectedOption
   } = useAddEvents();
 
   return (
@@ -34,7 +39,7 @@ export default function AddEvents() {
       <>
         <Text style={AddEventsStyles.labels}>Event Name</Text>
         <TextInput
-          style={AddEventsStyles.inputs}
+          style={[GlobalStyle.globalInput,{paddingVertical:12}]}
           placeholder="Event Name"
           keyboardType="default"
           onChangeText={val => {
@@ -46,7 +51,7 @@ export default function AddEvents() {
       <>
         <Text style={AddEventsStyles.labels}>Ticket Price</Text>
         <TextInput
-          style={AddEventsStyles.inputs}
+          style={[GlobalStyle.globalInput,{paddingVertical:12}]}
           placeholder="$0.00"
           keyboardType="number-pad"
           onChangeText={val => {
@@ -58,7 +63,9 @@ export default function AddEvents() {
       <View>
         <Text style={AddEventsStyles.labels}>Event Date And Time</Text>
 
-        <Pressable style={AddEventsStyles.inputs} onPress={() => setOpen(true)}>
+        <TouchableOpacity
+          style={GlobalStyle.globalInput}
+          onPress={() => setOpen(true)}>
           <Text>{eventInfo.eventDate.toDateString()}</Text>
           {open && (
             <DatePicker
@@ -75,36 +82,63 @@ export default function AddEvents() {
               }}
             />
           )}
-        </Pressable>
+        </TouchableOpacity>
       </View>
       <View>
         <Text style={AddEventsStyles.labels}>Event Type</Text>
-
-        <Picker
-          selectedValue={eventInfo.eventType}
-          onValueChange={(itemValue, itemIndex) =>
-            handleChange('eventType', itemValue)
-          }
-          style={{backgroundColor: 'white'}}>
-          <Picker.Item label="Select Event Type" />
-          <Picker.Item label="Exhibition" value="Exhibition" />
-          <Picker.Item label="Workshop" value="Workshop" />
-          <Picker.Item label="Conference" value="Conference" />
-          <Picker.Item label="Festival" value="Festival" />
-          <Picker.Item label="Game" value="Game" />
-          <Picker.Item label="Premiere" value="Premiere" />
-          <Picker.Item label="Concert" value="Concert" />
-          <Picker.Item label="Charity Auction" value="Charity Auction" />
-          <Picker.Item label="Show" value="Show" />
-          <Picker.Item label="Gala" value="Gala" />
-          <Picker.Item label="Fair" value="Fair" />
-          <Picker.Item label="Comedy" value="Comedy" />
-        </Picker>
+        <View style={{marginVertical:2}}>
+                <TouchableOpacity
+                  onPress={() => setIsModalVisible(true)}
+                  style={GlobalStyle.globalInput}>
+                  <View style={{flexDirection:"row",justifyContent:"space-between",alignItems:"center",marginRight:10}}> 
+                    <Text style={AddEventsStyles.selectedOptionText}>
+                      {selectedOption}
+                    </Text>
+                    <Image 
+                    width={20}
+                    height={20}
+                    source={Images.arrowLogo}
+                    />
+                  </View>
+                </TouchableOpacity>
+                <Modal
+                  transparent={true}
+                  visible={isModalVisible}
+                  onRequestClose={() => {
+                    setIsModalVisible(false);
+                  }}>
+                  <TouchableWithoutFeedback
+                    onPress={() => {
+                      setIsModalVisible(false);
+                    }}>
+                    <View
+                      style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <View style={AddEventsStyles.modalContainer}>
+                        {options.map((option: string) => (
+                          <TouchableOpacity
+                            key={option}
+                            onPress={() => handleSelect(option)}>
+                            <View style={AddEventsStyles.optionContainer}>
+                              <Text  style={AddEventsStyles.optionText}>
+                                {option}
+                              </Text>
+                            </View>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
+                    </View>
+                  </TouchableWithoutFeedback>
+                </Modal>
+              </View>
       </View>
       <View>
         <Text style={AddEventsStyles.labels}>Event Location</Text>
         <TextInput
-          style={AddEventsStyles.inputs}
+          style={[GlobalStyle.globalInput,{paddingVertical:12}]}
           placeholder="Event Location"
           keyboardType="default"
           onChangeText={val => {
@@ -116,7 +150,7 @@ export default function AddEvents() {
       <View>
         <Text style={AddEventsStyles.labels}>Google Map Url</Text>
         <TextInput
-          style={AddEventsStyles.inputs}
+          style={[GlobalStyle.globalInput,{paddingVertical:12}]}
           placeholder="Paste Google Map URL"
           keyboardType="default"
           onChangeText={val => {
@@ -128,7 +162,7 @@ export default function AddEvents() {
       <View>
         <Text style={AddEventsStyles.labels}>Event Media</Text>
 
-        <Pressable onPress={openCamera}>
+        <TouchableOpacity onPress={openCamera}>
           <View style={AddEventsStyles.mediaBox}>
             {eventImage ? (
               <Image
@@ -140,16 +174,19 @@ export default function AddEvents() {
                 }}
                 style={{width: '100%', borderRadius: 10, height: '100%'}}
               />
-            ) : (
-              <Image source={require('../../../assets/logo/Upload.png')} />
+            ) : (<>
+              <Image source={Images.uploadLogo} />
+              <Text style={AddEventsStyles.uploadText}>Upload Image</Text></>
             )}
           </View>
-        </Pressable>
+        </TouchableOpacity>
       </View>
-      <Pressable style={AddEventsStyles.resultBtn} onPress={handlePostEvent}>
-        {isloading && <ActivityIndicator size={'small'} color={'white'} />}
-        <Text style={AddEventsStyles.textStyle}>Post Event</Text>
-      </Pressable>
+      <TouchableOpacity
+        style={AddEventsStyles.resultBtn}
+        onPress={handlePostEvent}>
+        {isLoading && <ActivityIndicator size={'small'} color={'white'} />}
+        <Text style={AddEventsStyles.textStyle}>Publish Event</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }

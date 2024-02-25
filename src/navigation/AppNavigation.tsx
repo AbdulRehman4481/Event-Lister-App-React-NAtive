@@ -1,20 +1,17 @@
 import React from 'react';
-import Frontend from '../screen/frontend';
-import Auth from '../auth';
-import {useSelector} from 'react-redux';
-import {RootState} from '../store/store';
 import {ActivityIndicator, StyleSheet, View} from 'react-native';
+import {useSelector} from 'react-redux';
 import useUserCheck from '../hooks/useUserCheck';
+import Auth from '../screen/auth';
+import Frontend from '../screen/frontend';
+import {RootState} from '../store/store';
 
 export default function AppNavigation() {
   const isAuth = useSelector((state: RootState) => state.auth.isAuth);
   const {isLoading} = useUserCheck();
-  console.log(isAuth);
-  console.log('isLoading', isLoading);
   return (
     <>
       {isLoading ? (
-        // <><Text>....loading</Text></>
         <View style={Style.loadingContainer}>
           <ActivityIndicator size="large" color="purple" />
         </View>

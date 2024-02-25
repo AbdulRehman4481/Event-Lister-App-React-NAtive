@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { colors } from "../../../constants/Colors";
 
 const DiscoveryStyle = StyleSheet.create({
     inputView: {
@@ -7,12 +8,10 @@ const DiscoveryStyle = StyleSheet.create({
       borderWidth: 1,
       borderRadius: 50,
       paddingHorizontal: 10,
-      borderColor: 'rgba(146, 146, 146, 0.19)',
+      borderColor: colors.lightGray,
       marginVertical: 20,
-    },
-    main: {
-      paddingHorizontal: 10,
-      paddingVertical: 20,
+      width:335,
+      marginHorizontal: 12,
     },
     mainHeading: {
       fontFamily: 'Poppins',
@@ -20,10 +19,7 @@ const DiscoveryStyle = StyleSheet.create({
       fontStyle: 'normal',
       fontWeight: '700',
       color: 'black',
-    },
-    secondView: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      padding:20
     },
     smallCard: {
       width: 305,
@@ -34,15 +30,15 @@ const DiscoveryStyle = StyleSheet.create({
       backgroundColor: 'white',
       padding: 5,
       shadowColor: 'black',
-      shadowOffset: {
-        width: 2,
-        height: 2,
-      },
-      shadowOpacity: 0.4,
-      shadowRadius: 3,
-      elevation: 4,
+    shadowOffset: {
+      width: 2,
+      height: 2,
     },
-    smallIamge: {
+    shadowOpacity: 0.4,
+    shadowRadius: 3,
+    elevation: 4,
+    },
+    smallImage: {
       backgroundColor: 'white',
       flex: 1,
       resizeMode: 'cover',
@@ -62,8 +58,8 @@ const DiscoveryStyle = StyleSheet.create({
       marginVertical: 8,
     },
     smallPrice: {
-      color: '#6F3DE9',
-      backgroundColor: 'rgba(146, 146, 146, 0.19)',
+      color: colors.primary,
+      backgroundColor: colors.lightGray,
       padding: 6,
       borderRadius: 15,
       // marginLeft:30
