@@ -1,11 +1,12 @@
 import firebase from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { useEffect, useState } from 'react';
-import { Alert } from 'react-native';
-import { FIRE_BASE_COLLECTION } from '../constants/FirebaseCollection';
-import { SigInUser } from '../constants/Types';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {useEffect, useState} from 'react';
+import {Alert} from 'react-native';
+import ShowToast from '../components/showToast/ShowTost';
+import {FIRE_BASE_COLLECTION} from '../constants/FirebaseCollection';
+import {SigInUser} from '../constants/Types';
 import useUserCheck from './useUserCheck';
 
 const initialState = {
@@ -29,6 +30,12 @@ export default function useSignIn() {
       .then(userCredential => {
         const user = userCredential.user;
         readUserProfile(user);
+      })
+      .catch(error => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        ShowToast('success', 'Email or Password is Incorrect');
       })
       .finally(() => {
         setIsProcessing(false);

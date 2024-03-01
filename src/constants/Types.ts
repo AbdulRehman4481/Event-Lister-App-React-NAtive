@@ -1,5 +1,4 @@
 import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamsList} from '../screen/auth';
 import {RootStackParamsLists} from '../screen/frontend';
 
 export interface SigInUser {
@@ -115,3 +114,14 @@ export interface DetailTicketScreenProp {
 export interface EventDetailScreenProp {
   navigation: StackNavigationProp<RootStackParamsLists, 'EventDetail'>;
 }
+
+
+
+export type RootStackParamsList = {
+  SignIn: undefined;
+  SignUp: undefined;
+};
+
+export type RootStackNavigationProps<T extends keyof RootStackParamsList> = {
+  navigation: StackNavigationProp<RootStackParamsList, T>;
+};

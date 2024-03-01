@@ -1,18 +1,10 @@
 import {
-  StackNavigationProp,
   createStackNavigator,
 } from '@react-navigation/stack';
 import React from 'react';
 import { AUTH_STACK_NAVIGATION_SCREENS } from '../../navigation/NavigationScreens';
+import { RootStackParamsList } from '../../constants/Types';
 
-export type RootStackParamsList = {
-  SignIn: undefined;
-  SignUp: undefined;
-};
-
-type RootStackNavigationProps<T extends keyof RootStackParamsList> = {
-  navigation: StackNavigationProp<RootStackParamsList, T>;
-};
 
 const Stack = createStackNavigator<RootStackParamsList>();
 export default function Index() {

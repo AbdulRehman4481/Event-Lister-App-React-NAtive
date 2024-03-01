@@ -2,7 +2,6 @@ import React from 'react';
 import {
   ActivityIndicator,
   Image,
-  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -18,7 +17,7 @@ export default function SignIn({navigation}: SignInScreenProp) {
     useSignIn();
 
   return (
-    <ScrollView>
+    <View>
       {isProcessing && (
         <View style={SignInStyle.loadingContainer}>
           <ActivityIndicator size="large" color="#7b2cbf" />
@@ -81,6 +80,6 @@ export default function SignIn({navigation}: SignInScreenProp) {
           </TouchableOpacity>
         </View>
       </View>
-    </ScrollView>
+    </View>
   );
 }

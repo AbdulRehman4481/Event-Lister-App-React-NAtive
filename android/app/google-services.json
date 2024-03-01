@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "453116556250-vesk8tfcs9l6g03tch31qk64lln28cru.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.eventlisterapp",
+            "certificate_hash": "aca8e241530865625806434242e787df161843e3"
+          }
+        },
+        {
           "client_id": "453116556250-nbi7332o8kdi0p0ebs4agmfe6pblfknb.apps.googleusercontent.com",
           "client_type": 3
         }

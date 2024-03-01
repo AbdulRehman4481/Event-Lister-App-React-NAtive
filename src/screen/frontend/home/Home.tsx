@@ -12,12 +12,11 @@ import {
   View,
 } from 'react-native';
 import Filter from '../../../components/filter/Filter';
-import { colors } from '../../../constants/Colors';
+import {colors} from '../../../constants/Colors';
 import Images from '../../../constants/Images';
-import { DetailTicketScreenProp } from '../../../constants/Types';
+import {DetailTicketScreenProp} from '../../../constants/Types';
 import useHome from '../../../hooks/useHome';
 import HomeStyle from './HomeStyle';
-
 
 export default function Home({navigation}: DetailTicketScreenProp) {
   const {
@@ -60,7 +59,7 @@ export default function Home({navigation}: DetailTicketScreenProp) {
                 accessibilityElementsHidden
                 scrollEnabled={false}
                 nestedScrollEnabled
-                data={filterData} 
+                data={filterData}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({item}) => (
                   <View style={HomeStyle.card}>
@@ -192,7 +191,7 @@ export default function Home({navigation}: DetailTicketScreenProp) {
                 </View>
                 {isLoading ? (
                   <ActivityIndicator color={colors.primary} size={'large'} />
-                ) : (
+                ) : todayEvent.length > 0 ? (
                   <FlatList
                     accessibilityElementsHidden
                     scrollEnabled={false}
@@ -254,6 +253,8 @@ export default function Home({navigation}: DetailTicketScreenProp) {
                       </View>
                     )}
                   />
+                ) : (
+                  <Text>No ongoing events today</Text>
                 )}
 
                 <View style={[HomeStyle.secondView, HomeStyle.secondViewExtra]}>

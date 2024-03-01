@@ -23,6 +23,7 @@ const Filter = ({
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(new Date());
   const [values, setValues] = useState([0, 5000]);
+  const [selectedOption, setSelectedOption] = useState('Select an option');
   const handleValuesChange = (newValues: number[]) => {
     setValues(newValues);
   };
@@ -52,7 +53,6 @@ const Filter = ({
     onFilterChange(values, selectedCategory, date);
     setModalVisible(!modalVisible);
   };
-  const [selectedOption, setSelectedOption] = useState('Select an option');
 
   const handleSelect = (option: string) => {
     setSelectedOption(option);

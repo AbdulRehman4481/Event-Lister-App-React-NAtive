@@ -1,11 +1,11 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import { useEffect, useState } from 'react';
-import { launchImageLibrary } from 'react-native-image-picker';
-import { useDispatch, useSelector } from 'react-redux';
+import {useEffect, useState} from 'react';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {useDispatch, useSelector} from 'react-redux';
 import ShowToast from '../components/showToast/ShowTost';
-import { setLoggedOut } from '../store/reducer/authReducer';
-import { RootState } from '../store/store';
+import {setLoggedOut} from '../store/reducer/authReducer';
+import {RootState} from '../store/store';
 
 export default function useMyProfile() {
   const user = useSelector((state: RootState) => state.auth.user);

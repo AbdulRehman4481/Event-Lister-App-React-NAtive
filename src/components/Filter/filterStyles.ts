@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import { colors } from '../../constants/Colors';
+import {StyleSheet} from 'react-native';
+import {colors} from '../../constants/Colors';
 
 const FilterStyles = StyleSheet.create({
   hr: {
@@ -7,7 +7,6 @@ const FilterStyles = StyleSheet.create({
     borderBottomWidth: 1,
     marginVertical: 10,
     marginHorizontal: 10,
-
   },
   customMarker: {
     borderWidth: 4,
@@ -82,17 +81,16 @@ const FilterStyles = StyleSheet.create({
     elevation: 5,
   },
   button: {
-    height:52,
+    height: 52,
     borderRadius: 28,
     // padding: 10,
-    alignItems:"center",
-    justifyContent:"center",
+    alignItems: 'center',
+    justifyContent: 'center',
     elevation: 2,
-
   },
   buttonClose: {
     backgroundColor: colors.primary,
-  marginVertical:10
+    marginVertical: 10,
   },
   textStyle: {
     color: 'white',

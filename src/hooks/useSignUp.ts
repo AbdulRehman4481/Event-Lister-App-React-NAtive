@@ -117,6 +117,7 @@ export default function useSignUp() {
       }
     } catch (error) {
       console.error('Google sign-in error:', error);
+      console.log(error);
       Alert.alert(
         'Google Sign-In Error',
         'An error occurred during Google sign-in. Please try again later.',

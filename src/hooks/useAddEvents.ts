@@ -5,10 +5,9 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import { useSelector } from 'react-redux';
 import ShowToast from '../components/showToast/ShowTost';
 import { FIRE_BASE_COLLECTION } from '../constants/FirebaseCollection';
-import { EventInfo } from '../constants/Types';
+import { EventImage, EventInfo } from '../constants/Types';
 import { RootState } from '../store/store';
 
-type EventImage = string | {assets: {uri: string; fileName: string}[]};
 
 const initialEvent: EventInfo = {
   eventName: '',

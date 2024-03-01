@@ -2,7 +2,6 @@ import React from 'react';
 import {
   ActivityIndicator,
   Image,
-  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -18,7 +17,7 @@ export default function SignUp({navigation}: SigUpScreenProp) {
     useSignUp();
 
   return (
-    <ScrollView>
+    <View>
       {isProcessing && (
         <View style={SignUpStyle.loadingContainer}>
           <ActivityIndicator size="large" color="#7b2cbf" />
@@ -91,6 +90,6 @@ export default function SignUp({navigation}: SigUpScreenProp) {
           </TouchableOpacity>
         </View>
       </View>
-    </ScrollView>
+    </View>
   );
 }

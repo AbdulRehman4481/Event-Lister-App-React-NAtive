@@ -47,12 +47,19 @@ export default function useHome() {
         const selectedValueToLower = selectedValue.toLowerCase();
         const eventDate = new Date(event.eventDate);
 
-        const dateCondition = eventDate >= new Date(date);
-        const priceCondition =
-          eventPrice >= values[0] && eventPrice <= values[1];
-        const typeCondition =
-          !selectedValueToLower || eventType === selectedValueToLower;
-        return typeCondition && priceCondition && dateCondition;
+        if (!selectedValueToLower) {
+          const dateCondition = eventDate >= new Date(date);
+          const priceCondition =
+            eventPrice >= values[0] && eventPrice <= values[1];
+          const typeCondition =
+            !selectedValueToLower || eventType === selectedValueToLower;
+          return typeCondition && priceCondition && dateCondition;
+        } else {
+          const dateCondition = eventDate >= new Date(date);
+          const priceCondition =
+            eventPrice >= values[0] && eventPrice <= values[1];
+          return priceCondition && dateCondition;
+        }
       });
       setFilterData(filteredData);
       setShowSorted(true);

@@ -20,7 +20,7 @@ export default function useTicketDetail(ticketId: string) {
           ticketData.eventDate = ticketData.eventDate.toDate()
           setTicketDetails(ticketData);
         } else {
-          console.log('No matching document found for ticketId:', ticketId); // Log 2
+          console.log('No matching document found for ticketId:', ticketId); 
         }
       } catch (error) {}
     };

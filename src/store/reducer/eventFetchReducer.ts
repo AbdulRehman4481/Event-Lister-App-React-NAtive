@@ -1,14 +1,12 @@
 import firestore from '@react-native-firebase/firestore';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { FIRE_BASE_COLLECTION } from '../../constants/FirebaseCollection';
-import { EventInfo, EventState } from '../../constants/Types';
-
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {FIRE_BASE_COLLECTION} from '../../constants/FirebaseCollection';
+import {EventInfo, EventState} from '../../constants/Types';
 const initialState: EventState = {
   eventData: [],
   todayEvent: [],
   isLoading: false,
 };
-
 export const fetchEvents = createAsyncThunk<EventInfo[], void>(
   'events/fetchEvents',
   async () => {
@@ -17,7 +15,6 @@ export const fetchEvents = createAsyncThunk<EventInfo[], void>(
       .orderBy('eventDate')
       .get();
     const events: EventInfo[] = [];
-
     querySnapshot.forEach(documentSnapshot => {
       const data = {...(documentSnapshot.data() as EventInfo)};
       data.eventDate = documentSnapshot.data().eventDate.toDate();
@@ -26,7 +23,6 @@ export const fetchEvents = createAsyncThunk<EventInfo[], void>(
     return events;
   },
 );
-
 export const fetchTodayEvents = createAsyncThunk<EventInfo[], void>(
   'events/fetchTodayEvents',
   async () => {
@@ -41,22 +37,18 @@ export const fetchTodayEvents = createAsyncThunk<EventInfo[], void>(
       today.getMonth(),
       today.getDate() + 1,
     );
-
     const querySnapshot = await firestore()
       .collection(FIRE_BASE_COLLECTION.EVENTINFO)
       .where('eventDate', '>=', startOfToday)
       .where('eventDate', '<', endOfDay)
       .limit(1)
       .get();
-
     const events: EventInfo[] = [];
-
     querySnapshot.forEach(documentSnapshot => {
       const data = {...(documentSnapshot.data() as EventInfo)};
       data.eventDate = documentSnapshot.data().eventDate.toDate();
       events.push(data);
     });
-
     return events;
   },
 );
