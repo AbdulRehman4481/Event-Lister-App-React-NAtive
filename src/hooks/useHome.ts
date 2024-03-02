@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import { EventInfo } from '../constants/Types';
+import {useEffect, useState} from 'react';
+import {EventInfo} from '../constants/Types';
 import {
   fetchEvents,
   fetchTodayEvents,
 } from '../store/reducer/eventFetchReducer';
-import { RootState } from '../store/store';
-import { useAppDispatch, useAppSelector } from '../store/storeHook';
+import {RootState} from '../store/store';
+import {useAppDispatch, useAppSelector} from '../store/storeHook';
 
 export default function useHome() {
   const [showSorted, setShowSorted] = useState(false);
@@ -31,7 +31,6 @@ export default function useHome() {
         console.error('Error fetching data:', error);
       }
     };
-
     fetchData();
   }, [dispatch]);
 

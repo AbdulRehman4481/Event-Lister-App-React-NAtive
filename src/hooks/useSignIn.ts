@@ -17,7 +17,7 @@ export default function useSignIn() {
   const [state, setState] = useState(initialState);
   const [isProcessing, setIsProcessing] = useState(false);
   const {readUserProfile} = useUserCheck();
-
+// const
   const handleChange = (name: keyof SigInUser, value: string) => {
     setState(s => ({...s, [name]: value}));
   };
@@ -29,6 +29,7 @@ export default function useSignIn() {
       .signInWithEmailAndPassword(email, password)
       .then(userCredential => {
         const user = userCredential.user;
+        // dispatch()
         readUserProfile(user);
       })
       .catch(error => {

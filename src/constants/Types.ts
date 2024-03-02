@@ -80,6 +80,7 @@ export interface TicketInfo {
   userId: string;
   userName: string;
 }
+
 export interface EventInfo {
   eventName: string;
   eventPrice: number;

@@ -1,5 +1,5 @@
 import firestore from '@react-native-firebase/firestore';
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {PayloadAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {FIRE_BASE_COLLECTION} from '../../constants/FirebaseCollection';
 import {EventInfo, EventState} from '../../constants/Types';
 const initialState: EventState = {
@@ -9,20 +9,25 @@ const initialState: EventState = {
 };
 export const fetchEvents = createAsyncThunk<EventInfo[], void>(
   'events/fetchEvents',
-  async () => {
-    const querySnapshot = await firestore()
-      .collection(FIRE_BASE_COLLECTION.EVENTINFO)
-      .orderBy('eventDate')
-      .get();
-    const events: EventInfo[] = [];
-    querySnapshot.forEach(documentSnapshot => {
-      const data = {...(documentSnapshot.data() as EventInfo)};
-      data.eventDate = documentSnapshot.data().eventDate.toDate();
-      events.push(data);
+  async (_, {dispatch}) => {
+    return new Promise<EventInfo[]>((resolve, reject) => {
+      const unsubscribe = firestore()
+        .collection(FIRE_BASE_COLLECTION.EVENTINFO)
+        .orderBy('eventDate')
+        .onSnapshot(querySnapshot => {
+          const events: EventInfo[] = [];
+          querySnapshot.forEach(documentSnapshot => {
+            const data = {...(documentSnapshot.data() as EventInfo)};
+            data.eventDate = documentSnapshot.data().eventDate.toDate();
+            events.push(data);
+          });
+          dispatch(eventSlice.actions.fetchEventsFulfilled(events));
+          resolve(events);
+        });
     });
-    return events;
   },
 );
+
 export const fetchTodayEvents = createAsyncThunk<EventInfo[], void>(
   'events/fetchTodayEvents',
   async () => {
@@ -56,15 +61,19 @@ export const fetchTodayEvents = createAsyncThunk<EventInfo[], void>(
 const eventSlice = createSlice({
   name: 'events',
   initialState,
-  reducers: {},
+  reducers: {
+    fetchEventsFulfilled: (state, action: PayloadAction<EventInfo[]>) => {
+      state.eventData = action.payload;
+    },
+  },
   extraReducers: builder => {
     builder
       .addCase(fetchEvents.pending, state => {
         state.isLoading = true;
       })
       .addCase(fetchEvents.fulfilled, (state, action) => {
-        state.eventData = action.payload;
         state.isLoading = false;
+        state.eventData = action.payload;
       })
       .addCase(fetchEvents.rejected, state => {
         state.isLoading = false;
