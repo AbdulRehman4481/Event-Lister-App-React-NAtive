@@ -1,52 +1,26 @@
 {
   "project_info": {
-    "project_number": "453116556250",
-    "project_id": "eventlisterapp",
-    "storage_bucket": "eventlisterapp.appspot.com"
+    "project_number": "973539751439",
+    "project_id": "caremind-mobile",
+    "storage_bucket": "caremind-mobile.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:453116556250:android:7ae1a8c82d1a82668b46e3",
+        "mobilesdk_app_id": "1:973539751439:android:af9d09c4a4d88d700d557a",
         "android_client_info": {
           "package_name": "com.eventlisterapp"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "453116556250-jppg9ir6l8gqacdtj49dlap58d20gnvq.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.eventlisterapp",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
-          }
-        },
-        {
-          "client_id": "453116556250-vesk8tfcs9l6g03tch31qk64lln28cru.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.eventlisterapp",
-            "certificate_hash": "aca8e241530865625806434242e787df161843e3"
-          }
-        },
-        {
-          "client_id": "453116556250-nbi7332o8kdi0p0ebs4agmfe6pblfknb.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyD1stj1E2dkA2ra_4poxnNou8t0r6s9CyE"
+          "current_key": "AIzaSyDjovH1oWZrLUjtjeHDI_qeSn4qH7spPV0"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "453116556250-nbi7332o8kdi0p0ebs4agmfe6pblfknb.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

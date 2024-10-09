@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors } from '../../../constants/Colors';
+import { font } from '../../../constants/Fonts';
 
 const HomeStyle = StyleSheet.create({
   mainViewScroll: {
@@ -11,7 +12,7 @@ const HomeStyle = StyleSheet.create({
     justifyContent: 'space-between',
   },
   mainHeading: {
-    fontFamily: 'Poppins',
+    fontFamily: font.SEMIBOLD,
     fontSize: 22,
     fontStyle: 'normal',
     fontWeight: '600',
@@ -40,17 +41,15 @@ const HomeStyle = StyleSheet.create({
     alignItems: 'center',
   },
   onText: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily:font.SEMIBOLD,
     fontSize: 18,
-    // fontStyle: 'normal',
     fontWeight: '600',
-    color: 'black',
+    color: colors.blackText,
     lineHeight: 23.4,
   },
   seeText: {
-    fontFamily: 'Poppins',
+    fontFamily: font.MEDIUM,
     fontSize: 14,
-    fontStyle: 'normal',
     fontWeight: '500',
     color: colors.primary,
   },
@@ -191,6 +190,8 @@ const HomeStyle = StyleSheet.create({
     marginVertical: 8,
   },
   smallPrice: {
+    fontFamily:font.MEDIUM,
+    fontSize:12,
     color: colors.primary,
     backgroundColor: colors.lightGray,
     padding: 6,

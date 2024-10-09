@@ -1,22 +1,34 @@
-import React, {useEffect} from 'react';
-import AppNavigation from './src/navigation/AppNavigation';
 import {NavigationContainer} from '@react-navigation/native';
+import React, {useEffect} from 'react';
 import SplashScreen from 'react-native-splash-screen';
-import {ToastProvider} from 'react-native-toast-notifications';
-import {Provider} from 'react-redux';
-import store from './src/store/store';
+import {createStackNavigator} from '@react-navigation/stack';
+import Home from './src/screen/frontend/home/Home';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import Login from './src/screen/frontend/login/Login';
+import TaskDetail from './src/screen/frontend/TaskDetail/[id]';
 
 export default function App() {
   useEffect(() => {
     SplashScreen.hide();
   }, []);
+  const Stack = createStackNavigator();
+
   return (
-    <ToastProvider>
-      <Provider store={store}>
+    <GestureHandlerRootView style={{flex: 1}}>
+      <SafeAreaProvider>
         <NavigationContainer>
-          <AppNavigation />
+          <Stack.Navigator>
+            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen
+              name="TaskDetail"
+              options={{title: 'Task Detail'}}
+              component={TaskDetail}
+            />
+          </Stack.Navigator>
         </NavigationContainer>
-      </Provider>
-    </ToastProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
